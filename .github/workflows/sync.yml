@@ -1,0 +1,24 @@
+name: Autu merge upstream master
+on:
+  schedule:
+    # daily
+    - cron:  '0 0 * * *'
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Merge upstream master
+        run: |
+          git config --global user.name 'pd-buildserver'
+          git config --global user.email 'sysadmin@playdead.com'
+
+          # "git checkout master" is unnecessary, already here by default
+          git pull --unshallow  
+          git remote add upstream https://github.com/shukriadams/tetrifact.git
+          git fetch upstream
+
+          git checkout master
+          git merge --no-edit upstream/master
+          git push origin master
+ 
